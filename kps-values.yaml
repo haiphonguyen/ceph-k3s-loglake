@@ -1,0 +1,27 @@
+grafana:
+  adminPassword: <GRAFANA_ADMIN_PASSWORD>
+  service:
+    type: NodePort
+    nodePort: 30300          # Grafana: http://192.168.100.21:30300
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki.loki.svc.cluster.local:3100
+prometheus:
+  prometheusSpec:
+    resources:
+      requests: { memory: 400Mi }
+      limits:   { memory: 800Mi }
+    additionalScrapeConfigs:
+      - job_name: 'ceph-mgr'
+        static_configs:
+          - targets: ['192.168.100.11:9283']
+      - job_name: 'ceph-exporter'
+        static_configs:
+          - targets: ['192.168.100.11:9926','192.168.100.12:9926','192.168.100.13:9926']
+      - job_name: 'ceph-node-exporter'
+        static_configs:
+          - targets: ['192.168.100.11:9100','192.168.100.12:9100','192.168.100.13:9100']
+alertmanager:
+  enabled: false

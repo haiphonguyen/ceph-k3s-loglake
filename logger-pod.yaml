@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logger
+  labels: { app: logger }
+spec:
+  containers:
+    - name: logger
+      image: busybox
+      command: ["/bin/sh","-c"]
+      args: ['i=0; while true; do echo "log line $i at $(date -u)"; i=$((i+1)); sleep 0.5; done']

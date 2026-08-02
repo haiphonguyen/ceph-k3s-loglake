@@ -1,0 +1,44 @@
+loki:
+  auth_enabled: false
+  ingester:
+    chunk_idle_period: 1m
+    max_chunk_age: 2m
+    chunk_target_size: 262144
+  commonConfig:
+    replication_factor: 1
+  schemaConfig:
+    configs:
+      - from: 2024-01-01
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h
+  storage:
+    type: s3
+    bucketNames:
+      chunks: loki-data
+      ruler: loki-data
+      admin: loki-data
+    s3:
+      endpoint: http://192.168.100.11:80
+      region: us-east-1
+      accessKeyId: <ACCESS_KEY>
+      secretAccessKey: <SECRET_KEY>
+      s3ForcePathStyle: true
+      insecure: true
+deploymentMode: SingleBinary
+singleBinary:
+  replicas: 1
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits:   { memory: 512Mi }
+read:    { replicas: 0 }
+write:   { replicas: 0 }
+backend: { replicas: 0 }
+chunksCache:   { enabled: false }
+resultsCache:  { enabled: false }
+lokiCanary:    { enabled: false }
+test:          { enabled: false }
+gateway:       { enabled: false }

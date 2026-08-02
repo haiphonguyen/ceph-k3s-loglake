@@ -1,0 +1,5 @@
+*.key
+*.keyring
+*secret*
+kubeconfig
+.DS_Store
